@@ -15,7 +15,8 @@
 </nav>
 
 <main class="container mt-5 mb-5">
-  
+
+  <!-- Formulaire de configuration -->
   <div class="row justify-content-center" *ngIf="!processingResult">
     <div class="col-md-10 col-lg-8">
       <div class="card shadow-lg border-0">
@@ -23,7 +24,7 @@
           <h4 class="card-title mb-0"><i class="fas fa-sliders-h me-2"></i>Paramètres de nettoyage</h4>
         </div>
         <div class="card-body p-4">
-          
+
           <div class="mb-4">
             <label class="form-label fw-bold">1. Sélectionner le jeu de données</label>
             <input type="file" class="form-control form-control-lg" (change)="onFileSelected($event)" accept=".csv,.xlsx,.xls,.json">
@@ -78,8 +79,10 @@
     </div>
   </div>
 
+  <!-- Dashboard après traitement -->
   <div class="row g-4" *ngIf="processingResult">
-    
+
+    <!-- Alert succès -->
     <div class="col-12">
       <div class="alert alert-success border-0 shadow-sm d-flex align-items-center p-4">
         <i class="fas fa-check-circle fa-3x me-3"></i>
@@ -90,11 +93,20 @@
       </div>
     </div>
 
+    <!-- Cartes métriques -->
     <div class="col-md-3">
       <div class="card border-0 shadow-sm text-center p-3 h-100">
         <small class="text-muted fw-bold text-uppercase">Lignes Finales</small>
         <h2 class="text-primary fw-bold mt-2 mb-0">{{ processingResult.final_analysis.shape[0] }}</h2>
         <small class="text-muted">sur {{ processingResult.original_analysis.shape[0] }}</small>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm text-center p-3 h-100">
+        <small class="text-muted fw-bold text-uppercase">Colonnes</small>
+        <h2 class="text-primary fw-bold mt-2 mb-0">{{ processingResult.final_analysis.shape[1] }}</h2>
+        <small class="text-muted">sur {{ processingResult.original_analysis.shape[1] }}</small>
       </div>
     </div>
 
@@ -128,16 +140,6 @@
       </div>
     </div>
 
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm text-center p-3 h-100">
-        <small class="text-muted fw-bold text-uppercase">Normalisation</small>
-        <h2 [class.text-info]="options.normalize" class="fw-bold mt-2 mb-0">
-          {{ options.normalize ? (options.norm_method === 'minmax' ? '[-1, 1]' : 'Z-Score') : 'Aucune' }}
-        </h2>
-        <small class="text-muted" *ngIf="options.normalize">Méthode appliquée sur les numériques</small>
-      </div>
-    </div>
-
     <div class="col-lg-8">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white py-3">
@@ -163,6 +165,14 @@
                     <span class="text-danger small" *ngIf="processingResult.final_analysis.shape[0] < processingResult.original_analysis.shape[0]">
                       <i class="fas fa-arrow-down me-1"></i>{{ processingResult.original_analysis.shape[0] - processingResult.final_analysis.shape[0] }} supprimées
                     </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="ps-4 fw-medium">Nombre de Colonnes</td>
+                  <td class="text-center text-muted">{{ processingResult.original_analysis.shape[1] }}</td>
+                  <td class="text-center fw-bold">{{ processingResult.final_analysis.shape[1] }}</td>
+                  <td class="text-center">
+                    <span class="badge bg-light text-dark" *ngIf="processingResult.final_analysis.shape[1] === processingResult.original_analysis.shape[1]">Inchangée</span>
                   </td>
                 </tr>
                 <tr>
