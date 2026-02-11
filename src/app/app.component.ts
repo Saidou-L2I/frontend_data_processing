@@ -12,6 +12,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 export class AppComponent {
   selectedFile: File | null = null;
   processingResult: any = null;
+
   options = {
     handle_missing: 'fill_mean',
     handle_outliers: 'smart',
@@ -21,10 +22,13 @@ export class AppComponent {
 
   constructor(private http: HttpClient) {}
 
-  onFileSelected(event: any) { this.selectedFile = event.target.files[0]; }
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
 
   processFile() {
     if (!this.selectedFile) return;
+
     const formData = new FormData();
     formData.append('file', this.selectedFile);
     formData.append('handle_missing', this.options.handle_missing);
@@ -32,13 +36,25 @@ export class AppComponent {
     formData.append('normalize', String(this.options.normalize));
     formData.append('norm_method', this.options.norm_method);
 
-    this.http.post('https://backend-data-processing.onrender.com/process', formData).subscribe({
-      next: (res: any) => this.processingResult = res,
-      error: () => alert("Erreur serveur")
-    });
+    this.http.post('https://backend-data-processing.onrender.com/process', formData)
+      .subscribe({
+        next: (res: any) => {
+          this.processingResult = res;
+
+          // Sécuriser les colonnes si backend ne fournit pas directement
+          if (!this.processingResult.original_analysis.columns && this.processingResult.original_analysis.shape) {
+            this.processingResult.original_analysis.columns = this.processingResult.original_analysis.shape[1];
+          }
+          if (!this.processingResult.final_analysis.columns && this.processingResult.final_analysis.shape) {
+            this.processingResult.final_analysis.columns = this.processingResult.final_analysis.shape[1];
+          }
+        },
+        error: () => alert("Erreur serveur")
+      });
   }
 
   downloadProcessedFile() {
+    if (!this.processingResult) return;
     window.location.href = `https://backend-data-processing.onrender.com/download/${this.processingResult.processed_filename}`;
   }
 
