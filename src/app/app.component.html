@@ -4,10 +4,16 @@
       <i class="fas fa-robot me-2"></i>DSIA DataCleaner
     </a>
     <div class="navbar-nav ms-auto">
-      <a class="nav-link px-3" href="javascript:void(0)" (click)="reset()" [class.active]="!processingResult">
+      <a class="nav-link px-3"
+         href="javascript:void(0)"
+         (click)="reset()"
+         [class.active]="!processingResult">
         <i class="fas fa-cog me-1"></i> Configuration
       </a>
-      <a class="nav-link px-3" href="javascript:void(0)" *ngIf="processingResult" class="active">
+      <a class="nav-link px-3"
+         href="javascript:void(0)"
+         *ngIf="processingResult"
+         class="active">
         <i class="fas fa-chart-pie me-1"></i> Dashboard
       </a>
     </div>
@@ -15,71 +21,11 @@
 </nav>
 
 <main class="container mt-5 mb-5">
-  
-  <div class="row justify-content-center" *ngIf="!processingResult">
-    <div class="col-md-10 col-lg-8">
-      <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary text-white py-3">
-          <h4 class="card-title mb-0"><i class="fas fa-sliders-h me-2"></i>Paramètres de nettoyage</h4>
-        </div>
-        <div class="card-body p-4">
-          
-          <div class="mb-4">
-            <label class="form-label fw-bold">1. Sélectionner le jeu de données</label>
-            <input type="file" class="form-control form-control-lg" (change)="onFileSelected($event)" accept=".csv,.xlsx,.xls,.json">
-            <div class="form-text text-muted mt-2">
-              <i class="fas fa-info-circle me-1"></i> Note : Les doublons seront automatiquement détectés et supprimés.
-            </div>
-          </div>
 
-          <hr class="my-4 text-muted">
-
-          <div class="row g-4">
-            <div class="col-md-6">
-              <label class="form-label fw-bold">Valeurs manquantes</label>
-              <select class="form-select" [(ngModel)]="options.handle_missing">
-                <option value="fill_mean">Numérique: Moyenne | Texte: Mode</option>
-                <option value="fill_median">Numérique: Médiane | Texte: Mode</option>
-                <option value="drop">Supprimer les lignes incomplètes</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label fw-bold">Valeurs aberrantes (Outliers)</label>
-              <select class="form-select" [(ngModel)]="options.handle_outliers">
-                <option value="smart">Auto-suppression si ≤ 5% des données</option>
-                <option value="none">Aucun traitement (Conserver tout)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row g-4 mt-2">
-            <div class="col-md-6">
-              <div class="form-check mt-4">
-                <input class="form-check-input" type="checkbox" id="normCheck" [(ngModel)]="options.normalize">
-                <label class="form-check-label fw-bold" for="normCheck">Activer la Normalisation</label>
-              </div>
-            </div>
-            <div class="col-md-6" *ngIf="options.normalize">
-              <label class="form-label fw-bold">Méthode de scaling</label>
-              <select class="form-select border-info" [(ngModel)]="options.norm_method">
-                <option value="minmax">Min-Max Scaling (Intervalle [-1, 1])</option>
-                <option value="standard">Z-Score (Moyenne 0, Écart-type 1)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="d-grid mt-5">
-            <button class="btn btn-primary btn-lg shadow" (click)="processFile()" [disabled]="!selectedFile">
-              <i class="fas fa-sync-alt me-2"></i> Lancer le traitement intelligent
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <!-- DASHBOARD -->
   <div class="row g-4" *ngIf="processingResult">
-    
+
+    <!-- SUCCESS MESSAGE -->
     <div class="col-12">
       <div class="alert alert-success border-0 shadow-sm d-flex align-items-center p-4">
         <i class="fas fa-check-circle fa-3x me-3"></i>
@@ -90,14 +36,33 @@
       </div>
     </div>
 
+    <!-- LIGNES -->
     <div class="col-md-3">
       <div class="card border-0 shadow-sm text-center p-3 h-100">
         <small class="text-muted fw-bold text-uppercase">Lignes Finales</small>
-        <h2 class="text-primary fw-bold mt-2 mb-0">{{ processingResult.final_analysis.shape[0] }}</h2>
-        <small class="text-muted">sur {{ processingResult.original_analysis.shape[0] }}</small>
+        <h2 class="text-primary fw-bold mt-2 mb-0">
+          {{ processingResult.final_analysis.shape[0] }}
+        </h2>
+        <small class="text-muted">
+          sur {{ processingResult.original_analysis.shape[0] }}
+        </small>
       </div>
     </div>
 
+    <!-- COLONNES -->
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm text-center p-3 h-100">
+        <small class="text-muted fw-bold text-uppercase">Colonnes Finales</small>
+        <h2 class="text-info fw-bold mt-2 mb-0">
+          {{ processingResult.final_analysis.shape[1] }}
+        </h2>
+        <small class="text-muted">
+          sur {{ processingResult.original_analysis.shape[1] }}
+        </small>
+      </div>
+    </div>
+
+    <!-- DOUBLONS -->
     <div class="col-md-3">
       <div class="card border-0 shadow-sm text-center p-3 h-100">
         <small class="text-muted fw-bold text-uppercase">Doublons Supprimés</small>
@@ -108,40 +73,24 @@
       </div>
     </div>
 
+    <!-- OUTLIERS -->
     <div class="col-md-3">
       <div class="card border-0 shadow-sm text-center p-3 h-100">
         <small class="text-muted fw-bold text-uppercase">Valeurs Aberrantes</small>
         <h2 class="text-warning fw-bold mt-2 mb-0">
           {{ processingResult.original_analysis.outliers_total }}
         </h2>
-        <div class="mt-2">
-          <span *ngIf="processingResult.final_analysis.outliers_total < processingResult.original_analysis.outliers_total" class="badge bg-success">
-            Supprimées (≤ 5%)
-          </span>
-          <span *ngIf="processingResult.final_analysis.outliers_total == processingResult.original_analysis.outliers_total && processingResult.original_analysis.outliers_total > 0" class="badge bg-secondary">
-            Conservées (> 5%)
-          </span>
-          <span *ngIf="processingResult.original_analysis.outliers_total == 0" class="badge bg-light text-dark">
-            Aucune
-          </span>
-        </div>
       </div>
     </div>
 
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm text-center p-3 h-100">
-        <small class="text-muted fw-bold text-uppercase">Normalisation</small>
-        <h2 [class.text-info]="options.normalize" class="fw-bold mt-2 mb-0">
-          {{ options.normalize ? (options.norm_method === 'minmax' ? '[-1, 1]' : 'Z-Score') : 'Aucune' }}
-        </h2>
-        <small class="text-muted" *ngIf="options.normalize">Méthode appliquée sur les numériques</small>
-      </div>
-    </div>
-
+    <!-- TABLE IMPACT -->
     <div class="col-lg-8">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white py-3">
-          <h5 class="mb-0 fw-bold"><i class="fas fa-balance-scale me-2 text-primary"></i>Impact du nettoyage</h5>
+          <h5 class="mb-0 fw-bold">
+            <i class="fas fa-balance-scale me-2 text-primary"></i>
+            Impact du nettoyage
+          </h5>
         </div>
         <div class="card-body p-0">
           <div class="table-responsive">
@@ -155,56 +104,71 @@
                 </tr>
               </thead>
               <tbody>
+
+                <!-- LIGNES -->
                 <tr>
                   <td class="ps-4 fw-medium">Volume de données (Lignes)</td>
-                  <td class="text-center text-muted">{{ processingResult.original_analysis.shape[0] }}</td>
-                  <td class="text-center fw-bold">{{ processingResult.final_analysis.shape[0] }}</td>
+                  <td class="text-center text-muted">
+                    {{ processingResult.original_analysis.shape[0] }}
+                  </td>
+                  <td class="text-center fw-bold">
+                    {{ processingResult.final_analysis.shape[0] }}
+                  </td>
                   <td class="text-center">
-                    <span class="text-danger small" *ngIf="processingResult.final_analysis.shape[0] < processingResult.original_analysis.shape[0]">
-                      <i class="fas fa-arrow-down me-1"></i>{{ processingResult.original_analysis.shape[0] - processingResult.final_analysis.shape[0] }} supprimées
+                    <span class="text-danger small"
+                          *ngIf="processingResult.final_analysis.shape[0] < processingResult.original_analysis.shape[0]">
+                      <i class="fas fa-arrow-down me-1"></i>
+                      {{ processingResult.original_analysis.shape[0] - processingResult.final_analysis.shape[0] }} supprimées
                     </span>
                   </td>
                 </tr>
+
+                <!-- COLONNES -->
                 <tr>
-                  <td class="ps-4 fw-medium">Valeurs Manquantes (Cellules)</td>
-                  <td class="text-center text-muted">{{ processingResult.original_analysis.missing_total }}</td>
-                  <td class="text-center text-success fw-bold">{{ processingResult.final_analysis.missing_total }}</td>
+                  <td class="ps-4 fw-medium">Nombre de Colonnes</td>
+                  <td class="text-center text-muted">
+                    {{ processingResult.original_analysis.shape[1] }}
+                  </td>
+                  <td class="text-center fw-bold">
+                    {{ processingResult.final_analysis.shape[1] }}
+                  </td>
                   <td class="text-center">
-                    <span class="badge bg-soft-success text-success px-3">Complété</span>
+                    <i class="fas fa-columns text-info"></i>
                   </td>
                 </tr>
+
+                <!-- VALEURS MANQUANTES -->
+                <tr>
+                  <td class="ps-4 fw-medium">Valeurs Manquantes (Cellules)</td>
+                  <td class="text-center text-muted">
+                    {{ processingResult.original_analysis.missing_total }}
+                  </td>
+                  <td class="text-center text-success fw-bold">
+                    {{ processingResult.final_analysis.missing_total }}
+                  </td>
+                  <td class="text-center">
+                    <span class="badge bg-success">Complété</span>
+                  </td>
+                </tr>
+
+                <!-- DOUBLONS -->
                 <tr>
                   <td class="ps-4 fw-medium">Doublons Identifiés</td>
-                  <td class="text-center text-muted">{{ processingResult.original_analysis.duplicates }}</td>
-                  <td class="text-center text-success fw-bold">{{ processingResult.final_analysis.duplicates }}</td>
-                  <td class="text-center"><i class="fas fa-check-double text-success"></i></td>
+                  <td class="text-center text-muted">
+                    {{ processingResult.original_analysis.duplicates }}
+                  </td>
+                  <td class="text-center text-success fw-bold">
+                    {{ processingResult.final_analysis.duplicates }}
+                  </td>
+                  <td class="text-center">
+                    <i class="fas fa-check-double text-success"></i>
+                  </td>
                 </tr>
+
               </tbody>
             </table>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="col-lg-4">
-      <div class="card border-0 shadow-sm bg-light mb-4">
-        <div class="card-body">
-          <h6 class="fw-bold"><i class="fas fa-info-circle me-2"></i>Résumé des règles</h6>
-          <ul class="small text-muted ps-3 mb-0">
-            <li>Doublons supprimés par défaut.</li>
-            <li>VM traitées par <b>{{ options.handle_missing }}</b>.</li>
-            <li *ngIf="options.normalize">Normalisation active ({{ options.norm_method }}).</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="d-grid gap-2">
-        <button class="btn btn-success btn-lg shadow-sm" (click)="downloadProcessedFile()">
-          <i class="fas fa-cloud-download-alt me-2"></i> Télécharger le CSV
-        </button>
-        <button class="btn btn-outline-secondary" (click)="reset()">
-          <i class="fas fa-undo me-2"></i> Traiter un autre fichier
-        </button>
       </div>
     </div>
 
