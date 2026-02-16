@@ -27,7 +27,7 @@
 
           <div class="mb-4">
             <label class="form-label fw-bold">1. Sélectionner le jeu de données</label>
-            <input type="file" class="form-control form-control-lg" (change)="onFileSelected($event)" accept=".csv,.xlsx,.xls,.json">
+            <input type="file" class="form-control form-control-lg" (change)="onFileSelected($event)" accept=".csv,.xlsx,.xls,.json,.xml">
             <div class="form-text text-muted mt-2">
               <i class="fas fa-info-circle me-1"></i> Les doublons/VA seront automatiquement détectés et supprimés.
             </div>
@@ -195,28 +195,29 @@
         </div>
       </div>
 
-      <div class="col-md-6 mt-3">
-        <label class="form-label fw-bold">Format de téléchargement</label>
-        <select class="form-select" [(ngModel)]="options.file_format">
-          <option value="csv">CSV (.csv)</option>
-          <option value="excel">Excel (.xlsx)</option>
-        </select>
+      <div class="d-grid gap-2">
+
+      <!-- Bouton téléchargement avec dropdown -->
+      <div class="btn-group">
+        <button class="btn btn-success btn-lg shadow-sm" 
+                [disabled]="!processingResult"
+                (click)="downloadProcessedFile('excel')">
+          <i class="fas fa-file-download me-2"></i>
+          Télécharger le résultat (Excel .xlsx)
+        </button>
+
+        <button type="button" class="btn btn-success btn-lg dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false" [disabled]="!processingResult">
+          <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" (click)="downloadProcessedFile('excel'); $event.preventDefault()">Excel (.xlsx)</a></li>
+          <li><a class="dropdown-item" href="#" (click)="downloadProcessedFile('csv'); $event.preventDefault()">CSV (.csv)</a></li>
+        </ul>
       </div>
 
-      <div class="d-grid gap-2">
-      <!-- Bouton téléchargement dynamique -->
-      <button class="btn btn-success btn-lg shadow-sm" 
-              (click)="downloadProcessedFile()" 
-              [disabled]="!processingResult">
-        <i class="fas fa-file-download me-2"></i>
-        Télécharger le résultat 
-        <span *ngIf="processingResult">
-          ({{ options.file_format === 'excel' ? 'Excel .xlsx' : 'CSV .csv' }})
-        </span>
-      </button>
-
       <!-- Bouton reset -->
-      <button class="btn btn-outline-secondary" (click)="reset()">
+      <button class="btn btn-outline-secondary mt-2" (click)="reset()">
         <i class="fas fa-redo me-2"></i>Traiter un autre fichier
       </button>
 
