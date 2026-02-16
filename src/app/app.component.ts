@@ -63,7 +63,7 @@ export class AppComponent {
   const filename = this.processingResult.processed_filename;
 
   this.http.get(
-    `http://localhost:5000/download/${filename}?format=${format}`,
+    `https://backend-data-processing.onrender.com/download/${filename}?format=${format}`,
     { responseType: 'blob' }
   ).subscribe(blob => {
 
@@ -71,17 +71,14 @@ export class AppComponent {
     const a = document.createElement('a');
     a.href = url;
 
-    if (format === 'excel') {
-      a.download = 'resultat.xlsx';
-    } else {
-      a.download = 'resultat.csv';
-    }
+    a.download = format === 'excel'
+      ? 'resultat.xlsx'
+      : 'resultat.csv';
 
     a.click();
     window.URL.revokeObjectURL(url);
   });
 }
-
   reset() {
     this.processingResult = null;
     this.selectedFile = null;
