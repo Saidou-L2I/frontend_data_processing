@@ -195,14 +195,14 @@
         </div>
       </div>
 
-      <div class="d-grid gap-2">
-        <button class="btn btn-success btn-lg shadow-sm" (click)="downloadProcessedFile()">
-          <i class="fas fa-cloud-download-alt me-2"></i> Télécharger le CSV
-        </button>
-        <button class="btn btn-outline-secondary" (click)="reset()">
-          <i class="fas fa-undo me-2"></i> Traiter un autre fichier
-        </button>
+      <div class="col-md-6 mt-3">
+        <label class="form-label fw-bold">Format de téléchargement</label>
+        <select class="form-select" [(ngModel)]="options.file_format">
+          <option value="csv">CSV (.csv)</option>
+          <option value="excel">Excel (.xlsx)</option>
+        </select>
       </div>
+
     </div>
 
   </div>
