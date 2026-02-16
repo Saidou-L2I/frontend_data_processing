@@ -15,10 +15,10 @@ export class AppComponent {
 
   options = {
     handle_missing: 'fill_mean',
-    handle_outliers: 'smart',
+    //handle_outliers: 'smart',
     normalize: false,
     norm_method: 'minmax',
-    file_format: 'csv'
+    file_format: 'excel'
   };
 
   constructor(private http: HttpClient) {}
@@ -33,7 +33,7 @@ export class AppComponent {
     const formData = new FormData();
     formData.append('file', this.selectedFile);
     formData.append('handle_missing', this.options.handle_missing);
-    formData.append('handle_outliers', this.options.handle_outliers);
+    //formData.append('handle_outliers', this.options.handle_outliers);
     formData.append('normalize', String(this.options.normalize));
     formData.append('norm_method', this.options.norm_method);
     // 🔥 👉 METTRE ICI
