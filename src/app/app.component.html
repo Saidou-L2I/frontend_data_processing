@@ -203,6 +203,25 @@
         </select>
       </div>
 
+      <div class="d-grid gap-2">
+      <!-- Bouton téléchargement dynamique -->
+      <button class="btn btn-success btn-lg shadow-sm" 
+              (click)="downloadProcessedFile()" 
+              [disabled]="!processingResult">
+        <i class="fas fa-file-download me-2"></i>
+        Télécharger le résultat 
+        <span *ngIf="processingResult">
+          ({{ options.file_format === 'excel' ? 'Excel .xlsx' : 'CSV .csv' }})
+        </span>
+      </button>
+
+      <!-- Bouton reset -->
+      <button class="btn btn-outline-secondary" (click)="reset()">
+        <i class="fas fa-redo me-2"></i>Traiter un autre fichier
+      </button>
+
+    </div>
+
     </div>
 
   </div>
