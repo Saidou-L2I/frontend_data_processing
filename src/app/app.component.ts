@@ -17,7 +17,8 @@ export class AppComponent {
     handle_missing: 'fill_mean',
     handle_outliers: 'smart',
     normalize: false,
-    norm_method: 'minmax'
+    norm_method: 'minmax',
+    file_format: 'csv'
   };
 
   constructor(private http: HttpClient) {}
@@ -35,6 +36,8 @@ export class AppComponent {
     formData.append('handle_outliers', this.options.handle_outliers);
     formData.append('normalize', String(this.options.normalize));
     formData.append('norm_method', this.options.norm_method);
+    // 🔥 👉 METTRE ICI
+    formData.append('file_format', this.options.file_format);
 
     this.http.post('https://backend-data-processing.onrender.com/process', formData)
       .subscribe({
@@ -54,9 +57,25 @@ export class AppComponent {
   }
 
   downloadProcessedFile() {
-    if (!this.processingResult) return;
-    window.location.href = `https://backend-data-processing.onrender.com/download/${this.processingResult.processed_filename}`;
-  }
+  if (!this.processingResult) return;
+
+  const filename = this.processingResult.processed_filename;
+
+  this.http.get(
+    `https://backend-data-processing.onrender.com/download/${filename}`,
+    { responseType: 'blob' }
+  ).subscribe(blob => {
+
+    const downloadURL = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = downloadURL;
+    link.download = filename; // 🔥 garde le bon nom (.csv ou .xlsx)
+    link.click();
+
+    window.URL.revokeObjectURL(downloadURL);
+  });
+}
 
   reset() {
     this.processingResult = null;

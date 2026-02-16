@@ -29,7 +29,7 @@
             <label class="form-label fw-bold">1. Sélectionner le jeu de données</label>
             <input type="file" class="form-control form-control-lg" (change)="onFileSelected($event)" accept=".csv,.xlsx,.xls,.json">
             <div class="form-text text-muted mt-2">
-              <i class="fas fa-info-circle me-1"></i> Les doublons seront automatiquement détectés et supprimés.
+              <i class="fas fa-info-circle me-1"></i> Les doublons/VA seront automatiquement détectés et supprimés.
             </div>
           </div>
 
@@ -42,13 +42,6 @@
                 <option value="fill_mean">Numérique: Moyenne | Texte: Mode</option>
                 <option value="fill_median">Numérique: Médiane | Texte: Mode</option>
                 <option value="drop">Supprimer les lignes incomplètes</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label fw-bold">Valeurs aberrantes (Outliers)</label>
-              <select class="form-select" [(ngModel)]="options.handle_outliers">
-                <option value="smart">Auto-suppression si ≤ 5%</option>
-                <option value="none">Aucun traitement</option>
               </select>
             </div>
           </div>
@@ -195,6 +188,7 @@
           <h6 class="fw-bold"><i class="fas fa-info-circle me-2"></i>Résumé des règles</h6>
           <ul class="small text-muted ps-3 mb-0">
             <li>Doublons supprimés par défaut.</li>
+            <li>VA traiteés automatiquement.</li>
             <li>VM traitées par <b>{{ options.handle_missing }}</b>.</li>
             <li *ngIf="options.normalize">Normalisation active ({{ options.norm_method }}).</li>
           </ul>
