@@ -56,24 +56,29 @@ export class AppComponent {
       });
   }
 
-  downloadProcessedFile() {
+  downloadProcessedFile(format: string) {
+
   if (!this.processingResult) return;
 
   const filename = this.processingResult.processed_filename;
 
   this.http.get(
-    `https://backend-data-processing.onrender.com/download/${filename}`,
+    `http://localhost:5000/download/${filename}?format=${format}`,
     { responseType: 'blob' }
   ).subscribe(blob => {
 
-    const downloadURL = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
 
-    link.href = downloadURL;
-    link.download = filename; // 🔥 garde le bon nom (.csv ou .xlsx)
-    link.click();
+    if (format === 'excel') {
+      a.download = 'resultat.xlsx';
+    } else {
+      a.download = 'resultat.csv';
+    }
 
-    window.URL.revokeObjectURL(downloadURL);
+    a.click();
+    window.URL.revokeObjectURL(url);
   });
 }
 
