@@ -56,7 +56,7 @@
             <div class="col-md-6" *ngIf="options.normalize">
               <label class="form-label fw-bold">Méthode de scaling</label>
               <select class="form-select border-info" [(ngModel)]="options.norm_method">
-                <option value="minmax">Min-Max [-1, 1]</option>
+                <option value="minmax">Min-Max [0, 1]</option>
                 <option value="standard">Z-Score</option>
               </select>
             </div>
