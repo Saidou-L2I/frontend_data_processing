@@ -52,7 +52,10 @@ export class AppComponent {
             this.processingResult.final_analysis.columns = this.processingResult.final_analysis.shape[1];
           }
         },
-        error: () => alert("Erreur serveur")
+        error: (err) => {
+          console.log(err);
+          alert("Erreur serveur: " + err.status);
+        }
       });
   }
 
